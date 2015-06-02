@@ -33,7 +33,8 @@ class ExContr {
 class ContractsApp {
 	exContr: ExContr; 
 	jsongram: string;
-	imageLink: string;
+	latticeImage: string;
+	expectedValueChart: string;
 	errorMessage: string;
 	
 	exContrForm: ControlGroup;
@@ -49,7 +50,8 @@ class ContractsApp {
 		this.exContr.arg2 = 10;
 		this.exContr.image = true;
 
-		this.imageLink = ""
+		this.latticeImage = ""
+		this.expectedValueChart = ""
 
 		this.builder = b;
 		this.contracts = contracts;
@@ -80,14 +82,27 @@ class ContractsApp {
 		// request chart link
 		this.jsongram = JSON.stringify(this.exContr);
 		
-		// call service
+		// call lattice image service
 		this.contracts.getLatticeImage(this.exContr).then(function(response){
 			return response.text()
 		})
 		.then(function(dot){
 			console.log(dot)
 			me.errorMessage = "";
-			me.imageLink = "https://chart.googleapis.com/chart?"+"cht=gv&chl=" + escape(dot);
+			me.latticeImage = "https://chart.googleapis.com/chart?"+"cht=gv&chl=" + escape(dot);
+		})
+        .catch(function(err) {
+            me.errorMessage = err;
+        });
+
+		// call lattice image service
+		this.contracts.getExpectedValueChart(this.exContr).then(function(response){
+			return response.text()
+		})
+		.then(function(url){
+			console.log(url)
+			me.errorMessage = "";
+			me.expectedValueChart = url;
 		})
         .catch(function(err) {
             me.errorMessage = err;
