@@ -1,11 +1,10 @@
 <section id="main" >
 	
-	<div [control-group]="exContrForm">
+	<div [ng-form-model]="exContrForm">
 	
 	
 	<h2>Composing contracts - simple charts</h2>
-	
-	<div conrol-group="exContr">
+
 	<table>
 		<theader>
 			<tr>
@@ -18,41 +17,46 @@
 		<tbody>
 		<tr>
 			<td>
-			<select control="contract">
+			<select ng-control="contract">
 				<option value="zcb" selected="selected">Zero-coupon bond</option>
 				<option value="c11">European option</option>
 				<option value="probs">Probability lattice</option>
 				<option value="rates">Interest rate model</option>
 			</select>
 			</td>
-			<td><input control="arg1">
+			<td><input ng-control="arg1">
 			</td>
 			</td>
 			<td>
-			<input control="arg2">
+			<input ng-control="arg2">
 			</td>
+			
 			<td>
-			<input type="radio" name="image" control="image" value="true">Image</input>
+				<label>
+					<input type="checkbox" ng-control="image"/>Add Table
+				</label>
 			</td>
 		</tr>
 		<tr>
 			<td colspan=3>
-			<button (click)="displayChart(exContrForm)"> Draw </button>
+					<button (click)="displayChart(exContrForm)"> Draw </button>
 			</td>
 			<td>
-			<input type="radio" name="image" control="image" value="false">Table</input>
 			</td>
 		</tr>
 		</tbody>
 	</table>
 	</div>
-	</div>
+
+	
 </section>
 <hr>
-Json: {{ jsongram }}	
+Json: {{ exContrJson }}	
 <hr>
+
 <section id="display">
 	<span style="color:red">{{errorMessage}}</span>
+	<contract [json]='contractJson'></contract>
 	<image id='latticeImage' src="{{latticeImage}}"/>
 	<image id='expectedValueChart' src="{{expectedValueChart}}"/>
 </section>

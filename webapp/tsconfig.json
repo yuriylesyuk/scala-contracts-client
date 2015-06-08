@@ -5,8 +5,9 @@
 		"target": "es5"
 	},
 	"files": [
-		"contracts.ts",
 		"typings/angular2/angular2.d.ts",
-		"typings/whatwg-fetch/whatwg-fetch.d.ts"
+		"typings/whatwg-fetch/whatwg-fetch.d.ts",
+		"contractcomponent.ts",
+		"contracts.ts"
 	]
 }

@@ -2,10 +2,11 @@
 /// <reference path="typings/es6-promise/es6-promise.d.ts"/>
 /// <reference path="typings/whatwg-fetch/whatwg-fetch.d.ts"/>
 
-import {bootstrap, Component, View, For, Validators} from "angular2/angular2";
+import {bootstrap, Component, View, Validators} from "angular2/angular2";
 import {bind} from 'angular2/di';
-import {FormBuilder, formDirectives, ControlGroup} from 'angular2/forms';
-import {Contracts} from 'services/contracts'
+import {FormBuilder, formDirectives, ControlGroup,Control} from 'angular2/forms';
+import {Contracts} from 'services/contracts';
+import {ContractComponent} from 'contractcomponent';
 
 //{
 //	"contract": "contrname",
@@ -28,11 +29,13 @@ class ExContr {
 })
 @View({
 	templateUrl: 'contracts.html',
-	directives: [formDirectives]	
+	directives: [formDirectives,ContractComponent]	
 })
 class ContractsApp {
 	exContr: ExContr; 
-	jsongram: string;
+	exContrJson: string;
+	
+	contractJson: string;
 	latticeImage: string;
 	expectedValueChart: string;
 	errorMessage: string;
@@ -42,6 +45,8 @@ class ContractsApp {
 	builder: FormBuilder;
 	contracts: Contracts;
 	
+	
+	
 	constructor(b: FormBuilder, contracts: Contracts){
 		this.exContr = new ExContr();
 		
@@ -49,7 +54,8 @@ class ContractsApp {
 		this.exContr.arg1 = 3.0;
 		this.exContr.arg2 = 10;
 		this.exContr.image = true;
-
+		
+		this.contractJson = "{}"
 		this.latticeImage = ""
 		this.expectedValueChart = ""
 
@@ -60,12 +66,14 @@ class ContractsApp {
 			contract: [this.exContr.contract],
 			arg1: [this.exContr.arg1],
 			arg2: [this.exContr.arg2],
-			image: [this.exContr.image]
+			image: [this.exContr.image],
 		});
+		
+		
 		
 		// this.exContrForm.valueChanges.forEach( ()=> this.exContrForm.writeTo(this.exContr));
 	}
-	
+
 	updateModel(){
 		this.exContr.contract = this.exContrForm.controls.contract.value;
 		this.exContr.arg1 = parseInt( this.exContrForm.controls.arg1.value, 10 );
@@ -80,8 +88,24 @@ class ContractsApp {
 		this.updateModel()
 		
 		// request chart link
-		this.jsongram = JSON.stringify(this.exContr);
+		this.exContrJson = JSON.stringify(this.exContr);
+	
 		
+		// if asked, request the lattice as a json and render the table
+		if( this.exContr.image){
+			this.contracts.getLatticeJson(this.exContr).then(function(response){
+				return response.text()
+			})
+			.then(function(json){
+				me.errorMessage = "";
+				me.contractJson = json;
+			})
+	        .catch(function(err) {
+	            me.errorMessage = err;
+	        });			
+		}else{
+			this.contractJson = "{}";
+		}	
 		// call lattice image service
 		this.contracts.getLatticeImage(this.exContr).then(function(response){
 			return response.text()

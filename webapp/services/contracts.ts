@@ -13,7 +13,17 @@ export class Contracts{
 		});
 		return Zone.bindPromiseFn(fetch)(req) 
 	}
-	getLatticeImage(exContr) {
+	getLatticeJson(exContr) {
+		var req = new Request(this.host+'/api/v1/lattice', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'	
+			},
+			body: JSON.stringify(exContr)
+		});
+		return Zone.bindPromiseFn(fetch)(req) 
+	}	getLatticeImage(exContr) {
 		var req = new Request(this.host+'/api/v1/dot', {
 			method: 'POST',
 			headers: {
